@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 
 ACCOUNT_TYPES = [
@@ -35,19 +36,19 @@ class Account(models.Model):
     
 class Transaction(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
-    transaction_date = models.DateField(auto_now_add=True)
+    transaction_date = models.DateField(null=True, blank=True, default=datetime.date.today)
     # Time Stamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.description} @ {self.transaction_date}"
+        return f"{self.description} | {self.transaction_date}"
 
 class JournalEntry(models.Model):
     journal_type = models.CharField(choices=JOURNAL_TYPE, default="GJ", max_length=20)
     debit_credit = models.CharField(choices=DEBIT_CREDIT, max_length=10)
     is_posted = models.BooleanField(default=False)
-    post_date = models.DateField()
+    post_date = models.DateField(blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
 
@@ -57,5 +58,8 @@ class JournalEntry(models.Model):
     # Time Stamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.transaction.description} - {self.account.description}"
     class Meta:
         verbose_name_plural = "Journal Entries"
