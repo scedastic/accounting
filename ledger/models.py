@@ -59,6 +59,17 @@ class JournalEntry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def credit_amount(self):
+        if self.debit_credit == 'C':
+            return self.amount
+        return 0
+    
+    def debit_amount(self):
+        if self.debit_credit == 'D':
+            return self.amount
+        return 0
+
+
     def __str__(self):
         return f"{self.transaction.description} - {self.account.description}"
     class Meta:

@@ -37,6 +37,7 @@ class JournalEntryAdmin(admin.ModelAdmin):
     )
     list_filter = ['journal_type', 'account']
     search_fields = ['transaction',]
+    ordering = ['post_date', '-debit_credit']
 
 class JournalEntryInline(admin.TabularInline):
     model = JournalEntry

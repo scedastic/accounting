@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Journal Entries
+{% endblock title %}
+
+{% block page_heading %}
+<div class="px-3 h2">Journal Entries</div>
+{% endblock %}
+
+{% block content %}
+    
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Post Date</th>
+                <th scope="col">Transaction </th>
+                <th scope="col">Account </th>   
+                <th scope="col">Debit</th>
+                <th scope="col">Credit</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for journal_entry in object_list %}
+                <tr>
+                    <td>{{ journal_entry.post_date }}</td>
+                    <td>{{ journal_entry.transaction.description }}</td>
+                    <td>{{ journal_entry.account.description }}</td>
+                    <td class="text-end">$ {{ journal_entry.debit_amount }}</td>
+                    <td class="text-end">$ {{ journal_entry.credit_amount }}</td>
+                </tr>
+            {% empty %}
+                <tr><td>No Journal Entries.</td></tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock content %}

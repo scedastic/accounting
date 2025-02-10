@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-from .models import Account
+from .models import Account, JournalEntry
 
 class ChartOfAccountsView(LoginRequiredMixin, ListView):
     model = Account
     template_name = 'ledger/account_list.html'
 
+
+class JournalEntriesView(LoginRequiredMixin, ListView):
+    model = JournalEntry
+    template_name = 'ledger/journal_entry_list.html'
 
 def create_transaction(request):
     context = {
