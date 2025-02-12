@@ -24,7 +24,7 @@
                 <tr>
                     <td>{{ account.account_number }}</td>
                     <td>{{ account.description }}</td>
-                    <td>{{ account.account_type }}</td>
+                    <td>{{ account.get_account_type_display }}</td>
                     <td class="text-end">$ {{ account.balance }}</td>
                 </tr>
             {% empty %}

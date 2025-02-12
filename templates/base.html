@@ -27,8 +27,12 @@
 	{% endblock css %}
 </head>
 <body>
+    {% block navbar %}
+    {% include 'navbar.html' %}
+    {% endblock navbar %}
+
     {% block page_heading %}
-    {% endblock %}
+    {% endblock %}    
     <hr/>
     <!-- Main Body Content Start -->
     <div class="container">

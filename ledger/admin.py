@@ -7,7 +7,7 @@ class AccountAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Basic Information', {
-            'fields': ('account_number', 'description', 'account_type', 'balance'),
+            'fields': ('account_number', 'description', 'account_type', 'natural_balance', 'balance'),
          }),
         ('Time Stamps', {
             'fields': ('created_at', 'updated_at'),
@@ -20,12 +20,12 @@ class AccountAdmin(admin.ModelAdmin):
 
 
 class JournalEntryAdmin(admin.ModelAdmin):
-    list_display = ['journal_type', 'transaction', 'account', 'debit_credit', 'amount', 'is_posted']
-    readonly_fields = ['created_at', 'updated_at', 'is_posted', 'post_date']
+    list_display = ['journal_type', 'transaction', 'account', 'debit_credit', 'amount']
+    readonly_fields = ['created_at', 'updated_at']
     search_fields = ['transaction__description', 'account__description']
     fieldsets = (
         ('Basic Information', {
-            'fields': ('journal_type', 'debit_credit', 'amount', 'is_posted', 'post_date'),
+            'fields': ('journal_type', 'debit_credit', 'amount'),
         }),
          ('Related Fields', {
              'fields': ('transaction', 'account'), 
@@ -37,21 +37,25 @@ class JournalEntryAdmin(admin.ModelAdmin):
     )
     list_filter = ['journal_type', 'account']
     search_fields = ['transaction',]
-    ordering = ['post_date', '-debit_credit']
+    ordering = ['updated_at', '-debit_credit']
 
 class JournalEntryInline(admin.TabularInline):
     model = JournalEntry
 
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ['description',]
-    readonly_fields = ['created_at', 'updated_at']
-    ordering = ['-transaction_date',]
+    list_display = ['description','transaction_date', 'is_posted', 'post_date']
+    readonly_fields = ['created_at', 'updated_at', 'slug']
+    ordering = ['transaction_date',]
     fieldsets = (
         ('Basic Information', {
-            'fields': ('description', 'transaction_date'),
+            'fields': ('description', 'transaction_date', 'is_posted', 'post_date'),
          }),
         ('Time Stamps', {
             'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
+        }),
+        ('Unique', {
+            'fields': ('slug',),
             'classes': ('collapse',),
         }),
     )
