@@ -6,5 +6,5 @@ urlpatterns = [
     path('journal', views.JournalEntriesView.as_view(), name='journal'),
     path('transactions', views.TransactionsView.as_view(), name='transactions'),
     path('transaction/<slug:slug>/', views.TransactionDetailView.as_view(), name='transaction-detail'),
-    path('transaction/create', views.create_transaction, name='create-transaction'),
+    path('transaction/create', views.TransactionCreateView.as_view(), name='create-transaction'),
 ]

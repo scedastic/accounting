@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView
 from .models import Account, JournalEntry, Transaction
 
 class ChartOfAccountsView(LoginRequiredMixin, ListView):
@@ -11,6 +11,11 @@ class TransactionsView(LoginRequiredMixin, ListView):
     model = Transaction
 
 
+class TransactionCreateView(LoginRequiredMixin, CreateView):
+    model = Transaction
+    fields = ['description','transaction_date']
+
+    
 class TransactionDetailView(LoginRequiredMixin, DetailView):
     model = Transaction
 
@@ -21,6 +26,7 @@ class TransactionDetailView(LoginRequiredMixin, DetailView):
 class JournalEntriesView(LoginRequiredMixin, ListView):
     model = JournalEntry
     template_name = 'ledger/journal_entry_list.html'
+
 
 def create_transaction(request):
     context = {
