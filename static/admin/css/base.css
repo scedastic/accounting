@@ -1020,6 +1020,11 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 /* SIDEBAR */
+.sidebar-nav {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+}
 
 #content-related {
     background: var(--darkened-bg);

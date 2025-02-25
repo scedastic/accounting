@@ -30,7 +30,13 @@
     {% block navbar %}
     {% include 'navbar.html' %}
     {% endblock navbar %}
-
+<div class="row">
+    <div class="col-md-1">
+    {% block sidebar %}
+    {% include 'sidebar.html' %}
+    {% endblock %}
+    </div>
+    <div class="col-md-11">
     {% block page_heading %}
     {% endblock %}    
     <hr/>
@@ -40,8 +46,9 @@
 
     {% endblock content %}
     </div>
+    </div>
     <!-- Main Body Content End -->
-
+</div>
     <!-- Footer Start -->
     {% block footer %}
 
