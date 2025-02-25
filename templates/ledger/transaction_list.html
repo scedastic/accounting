@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}
 Transactions
 {% endblock title %}
@@ -22,6 +24,13 @@ Transactions
                 <tr>
                     <td>{{ transaction.transaction_date }}</td>
                     <td><a href="{% url 'transaction-detail' transaction.slug %}">{{ transaction.description }}</a></td>
+                    <td>
+                        {% if transaction.is_posted %}
+                            {% include 'img/green_circle_check.svg' %}
+                        {% else %}
+                            {% include 'img/red_circle_x.svg' %}
+                        {% endif %}
+                    </td>
                 </tr>
             {% empty %}
                 <tr><td>No Transactions.</td></tr>
