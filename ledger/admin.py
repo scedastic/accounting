@@ -3,7 +3,7 @@ from .models import Account, JournalEntry, Transaction
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ['account_number', 'description', 'account_type', 'balance']
-    readonly_fields = ['created_at', 'updated_at']
+    readonly_fields = ['created_at', 'updated_at', 'slug']
 
     fieldsets = (
         ('Basic Information', {
@@ -11,6 +11,10 @@ class AccountAdmin(admin.ModelAdmin):
          }),
         ('Time Stamps', {
             'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),   # Allows for collapsing this section on the admin page
+        }),
+        ('Unique', {
+            'fields': ('slug',),
             'classes': ('collapse',),
         }),
     )
@@ -43,12 +47,12 @@ class JournalEntryInline(admin.TabularInline):
     model = JournalEntry
 
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ['description','transaction_date', 'is_posted', 'post_date']
+    list_display = ['description','transaction_date', 'post_date'] # 'is_posted',
     readonly_fields = ['created_at', 'updated_at', 'slug']
     ordering = ['transaction_date',]
     fieldsets = (
         ('Basic Information', {
-            'fields': ('description', 'transaction_date', 'is_posted', 'post_date'),
+            'fields': ('description', 'transaction_date',  'post_date'), #'is_posted',
          }),
         ('Time Stamps', {
             'fields': ('created_at', 'updated_at'),

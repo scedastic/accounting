@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.urls import reverse
 
 ACCOUNT_TYPES = [
     ('A', 'Asset' ),
@@ -28,20 +29,28 @@ class Account(models.Model):
     account_type = models.CharField(choices=ACCOUNT_TYPES, blank=True, max_length=20)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     natural_balance = models.CharField(choices=DEBIT_CREDIT, max_length=10)
+    slug = models.SlugField(max_length=500, unique=True, blank=True, null=True)
 
     # Time Stamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_absolute_url(self):
+        return reverse("account-detail", kwargs={"slug": self.slug})
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(f"{self.account_number}-{self.description}")
+        return super(Account, self).save(*args, **kwargs)
+    
     def __str__(self):
         return f"{self.account_number} - {self.description}"
     
 class Transaction(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
     transaction_date = models.DateField(null=True, blank=True, default=datetime.date.today)
-    is_posted = models.BooleanField(default=False)
     post_date = models.DateField(blank=True, null=True)
     slug = models.SlugField(max_length=500, unique=True, blank=True, null=True)
+
     # Time Stamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -53,15 +62,25 @@ class Transaction(models.Model):
     def __str__(self):
         return f"{self.description} | {self.transaction_date}"
     
+    def is_posted(self):
+        for entry in self.entries.all():
+            if entry.is_posted == False:
+                return False
+        return True
+
     def post_transaction(self):
         for entry in self.entries.all():
             entry.post_entry()
+        self.post_date = datetime.datetime.today        
+        self.save()
+
 
 
 class JournalEntry(models.Model):
     journal_type = models.CharField(choices=JOURNAL_TYPE, default="GJ", max_length=20)
     debit_credit = models.CharField(choices=DEBIT_CREDIT, max_length=10)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    is_posted = models.BooleanField(default=False)
 
 
     account = models.ForeignKey(Account,  on_delete=models.CASCADE)
@@ -99,6 +118,7 @@ class JournalEntry(models.Model):
             self.account.balance -= self.amount
         self.post_date = datetime.date.today
         self.is_posted = True
+        self.save()
 
 
     def __str__(self):

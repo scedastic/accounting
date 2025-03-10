@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{%load crispy_forms_tags %}
+{% block title %}
+New Account
+{% endblock title %}
+
+{% block page_heading %}
+<div class="px-3 h2">New Account</div>
+{% endblock %}
+
+{% block content %}
+    <form method="POST" enctype="multipart/form-data">
+    
+        <!-- Security token -->
+        {% csrf_token %}
+    
+        <div class="col-4">
+            {{ form|crispy }}
+            
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+
+{% endblock %}
