@@ -17,6 +17,8 @@ Transactions
             <tr>
                 <th scope="col">Transaction Date</th>
                 <th scope="col">Description </th>
+                <th scope="col">Journal Entries</th>
+                <th scope="col">Status</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -24,6 +26,7 @@ Transactions
                 <tr>
                     <td>{{ transaction.transaction_date }}</td>
                     <td><a href="{% url 'transaction-detail' transaction.slug %}">{{ transaction.description }}</a></td>
+                    <td>{{ transaction.entries.count }}</td>
                     <td>
                         {% if transaction.is_posted %}
                             {% include 'img/green_circle_check.svg' %}

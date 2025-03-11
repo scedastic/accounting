@@ -5,8 +5,9 @@ from django.urls import reverse
 
 ACCOUNT_TYPES = [
     ('A', 'Asset' ),
+    ('I','Inventory'),
     ('L', 'Liability' ),
-    ('O', "Owner Equity" ),
+    ('O', 'Owner Equity'),
     ('R', 'Revenue' ),
     ('E', 'Expense' ),
 ]
@@ -22,6 +23,7 @@ JOURNAL_TYPE = [
     ('AP', 'AP'),
     ('SJ', 'SJ'),
     ('PJ', 'PJ'),
+    ('IJ', 'Inventory'),
 ]
 class Account(models.Model):
     account_number = models.CharField(max_length=25, null=True, blank=True)
@@ -55,6 +57,10 @@ class Transaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_absolute_url(self):
+        return reverse("transaction-detail", kwargs={"slug": self.slug})
+    
+
     def save(self, *args, **kwargs):
         self.slug = slugify(f"{self.description}{self.transaction_date}")
         super(Transaction, self).save(*args, **kwargs)
@@ -63,6 +69,8 @@ class Transaction(models.Model):
         return f"{self.description} | {self.transaction_date}"
     
     def is_posted(self):
+        if self.entries.count() == 0:
+            return False
         for entry in self.entries.all():
             if entry.is_posted == False:
                 return False

@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, ListView
 from .forms import AccountForm, TransactionForm
-from .models import Account, JournalEntry, Transaction
+from .models import Account, JournalEntry, Transaction, JOURNAL_TYPE
 
 class ChartOfAccountsView(LoginRequiredMixin, ListView):
     model = Account
@@ -36,9 +36,25 @@ class TransactionDetailView(LoginRequiredMixin, DetailView):
         
 
 class JournalEntriesView(LoginRequiredMixin, ListView):
-    model = JournalEntry
+    # model = JournalEntry
     template_name = 'ledger/journal_entry_list.html'
+    journal_types = dict(JOURNAL_TYPE)
 
+    def get_queryset(self):
+        if "journal_type" in self.kwargs.keys():            
+            journal_type_key = self.kwargs["journal_type"].upper()
+            journal = JournalEntry.objects.filter(journal_type=journal_type_key)
+        else:
+            journal = JournalEntry.objects.all()
+        return journal
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if "journal_type" in self.kwargs.keys():
+            context["journal_type"] = self.journal_types[self.kwargs["journal_type"].upper()]
+        else:
+            context["journal_type"] = self.journal_types["GJ"]
+        return context
 
 def create_transaction(request):
     context = {

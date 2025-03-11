@@ -22,8 +22,12 @@
                 </ul>
             </li>       
             
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'journal' %}">General Journal</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Journals</a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{% url 'journal' %}">General Ledger</a></li>
+                    <li><a class="nav-link" href="{% url 'filtered-journal' 'IJ' %}">Inventory Ledger</a></li>
+                </ul>
             </li>
          </ul>
 
