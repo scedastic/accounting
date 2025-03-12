@@ -19,11 +19,11 @@ DEBIT_CREDIT = [
 
 JOURNAL_TYPE = [
     ('GJ', 'General'),
+    ('IJ', 'Inventory'),
     ('AR', 'AR'),
     ('AP', 'AP'),
     ('SJ', 'SJ'),
     ('PJ', 'PJ'),
-    ('IJ', 'Inventory'),
 ]
 class Account(models.Model):
     account_number = models.CharField(max_length=25, null=True, blank=True)
@@ -82,15 +82,27 @@ class Transaction(models.Model):
         self.post_date = datetime.datetime.today        
         self.save()
 
+class JournalType(models.Model):
+    code = models.CharField(max_length=10, null=True, blank=True)
+    description = models.CharField(max_length=50, null=True, blank=True)
+
+    # Time Stamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    
+    def __str__(self):
+        return f"{self.code} - {self.description}"
+    class Meta:
+        verbose_name_plural = "Journal Types"
 
 
 class JournalEntry(models.Model):
-    journal_type = models.CharField(choices=JOURNAL_TYPE, default="GJ", max_length=20)
     debit_credit = models.CharField(choices=DEBIT_CREDIT, max_length=10)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     is_posted = models.BooleanField(default=False)
 
-
+    journal_type = models.ManyToManyField(JournalType)
     account = models.ForeignKey(Account,  on_delete=models.CASCADE)
     transaction = models.ForeignKey(Transaction, related_name='entries', on_delete=models.CASCADE)
 
