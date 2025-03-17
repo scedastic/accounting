@@ -17,14 +17,6 @@ DEBIT_CREDIT = [
     ('C', 'Credit'),
 ]
 
-JOURNAL_TYPE = [
-    ('GJ', 'General'),
-    ('IJ', 'Inventory'),
-    ('AR', 'AR'),
-    ('AP', 'AP'),
-    ('SJ', 'SJ'),
-    ('PJ', 'PJ'),
-]
 class Account(models.Model):
     account_number = models.CharField(max_length=25, null=True, blank=True)
     description = models.CharField(max_length=250, null=True, blank=True)
