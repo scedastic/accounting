@@ -26,7 +26,7 @@
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Journals</a>
                 <ul class="dropdown-menu">
                     {% for journal in journal_types %}
-                        <li>{{ journal }}</li>
+                        <li><a class="dropdown-item" href="{% url 'filtered-journal' journal.code  %}">{{ journal.description }}</a></li>
                     {% empty %} 
                         <li><a class="nav-link" href="{% url 'journal' %}">General Ledger</a></li>
                         <li><a class="nav-link" href="{% url 'filtered-journal' 'IJ' %}">Inventory Ledger</a></li>
