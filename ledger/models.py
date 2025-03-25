@@ -97,6 +97,14 @@ class Transaction(models.Model):
             if entry.is_posted == False:
                 return False
         return True
+    
+    def is_empty(self):
+        """True if there are no journal entries associated with this Transaction; False otherwise.
+
+        Returns:
+            bool: 
+        """
+        return self.entries.count() == 0
 
 class JournalType(models.Model):
     code = models.CharField(max_length=10, null=True, blank=True)

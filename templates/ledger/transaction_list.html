@@ -18,7 +18,8 @@ Transactions
                 <th scope="col">Transaction Date</th>
                 <th scope="col">Description </th>
                 <th scope="col">Journal Entries</th>
-                <th scope="col">Status</th>
+                <th scope="col">Posted</th>
+                <th scope="col">Balanced</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -32,6 +33,13 @@ Transactions
                             {% include 'img/green_circle_check.svg' %}
                         {% else %}
                             {% include 'img/red_circle_x.svg' %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if transaction.is_balanced and not transaction.is_empty %} 
+                            {% include 'img/thumbs_up.svg' %}
+                        {% else %}
+                            {% include 'img/thumbs_down.svg' %}
                         {% endif %}
                     </td>
                 </tr>
