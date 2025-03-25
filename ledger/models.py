@@ -49,6 +49,10 @@ class Transaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # Non-persistent fields
+    debits = 0
+    credits = 0
+
     def get_absolute_url(self):
         return reverse("transaction-detail", kwargs={"slug": self.slug})
     
@@ -59,6 +63,32 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.description} | {self.transaction_date}"
+
+    def post_transaction(self):
+        if not self.is_balanced():
+            raise ArithmeticError(f"Transaction is not balanced: debits: {self.debits}, credits: {self.credits}")
+        
+        for entry in self.entries.all():
+            entry.post_entry()
+        self.post_date = datetime.datetime.today        
+        self.save()
+
+    def is_balanced(self):
+        """Recalculates the total debits and credits of the Journal Entries in this transaction and returns whether they are equal
+
+        Returns:
+            bool: `debits` == `credits`
+        """
+        self.debits = 0
+        self.credits = 0
+
+        for entry in self.entries.all():
+            if entry.debit_credit=='D':
+                self.debits += entry.amount 
+            else:
+                self.credits += entry.amount
+
+        return self.debits == self.credits
     
     def is_posted(self):
         if self.entries.count() == 0:
@@ -68,15 +98,10 @@ class Transaction(models.Model):
                 return False
         return True
 
-    def post_transaction(self):
-        for entry in self.entries.all():
-            entry.post_entry()
-        self.post_date = datetime.datetime.today        
-        self.save()
-
 class JournalType(models.Model):
     code = models.CharField(max_length=10, null=True, blank=True)
     description = models.CharField(max_length=50, null=True, blank=True)
+    sort_order = models.IntegerField(default=99)
 
     # Time Stamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -87,6 +112,7 @@ class JournalType(models.Model):
         return f"{self.code} - {self.description}"
     class Meta:
         verbose_name_plural = "Journal Types"
+        ordering = ['sort_order',]
 
 
 class JournalEntry(models.Model):
