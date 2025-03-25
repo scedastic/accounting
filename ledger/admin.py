@@ -48,12 +48,12 @@ class JournalEntryInline(admin.TabularInline):
 
 
 class JournalTypeAdmin(admin.ModelAdmin):
-    list_display = ['code','description',] 
+    list_display = ['code','description','sort_order'] 
     readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('code', 'description'), 
+            'fields': ('code', 'description','sort_order'), 
         }),
         ('Time Stamps', {
             'fields': ('created_at', 'updated_at'),
@@ -63,12 +63,12 @@ class JournalTypeAdmin(admin.ModelAdmin):
 
 
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ['description','transaction_date', 'post_date'] # 'is_posted',
+    list_display = ['description','transaction_date', 'post_date']
     readonly_fields = ['created_at', 'updated_at', 'slug']
     ordering = ['transaction_date',]
     fieldsets = (
         ('Basic Information', {
-            'fields': ('description', 'transaction_date',  'post_date'), #'is_posted',
+            'fields': ('description', 'transaction_date',  'post_date'), 
          }),
         ('Time Stamps', {
             'fields': ('created_at', 'updated_at'),
