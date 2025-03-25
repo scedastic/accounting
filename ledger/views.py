@@ -55,6 +55,18 @@ class JournalEntriesView(LoginRequiredMixin, ListView):
             context["journal_type"] = JournalType.objects.filter(code="GJ")[0].description
         return context
 
+def default_journal(request):
+    return filtered_journal(request, 'GJ')  # General Journal
+
+def filtered_journal(request, journal_type):
+    journalType = JournalType.objects.filter(code=journal_type).first()
+    entries = JournalEntry.objects.filter(journal_type = journalType).order_by('transaction')
+    context = {
+        'journal_type': journalType.description,
+        'object_list': entries,
+    }
+    return render(request, 'ledger/journal_entry_list.html', context)
+
 def create_transaction(request):
     context = {
         'placeholder': 'This is just a placeholder'
