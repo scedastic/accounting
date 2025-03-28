@@ -19,9 +19,20 @@ Transactions
         <td> {{ object.description }}</td>
     </tr>
     <tr>
+        <th>Balanced?</th>
+        <td>
+            {% if object.is_empty %}
+            No Journal Entries attached.
+            {% elif object.is_balanced %}
+                {% include 'img/thumbs_up.svg' %}
+            {% else %}
+                {% include 'img/thumbs_down.svg' %}
+            {% endif %}
+        </td>
+    </tr><tr>
         <th>Posted?</th>
         <td>
-            {% if object.entries.count == 0 %}
+            {% if object.is_empty %}
                 No Journal Entries attached.
             {% elif object.is_posted %}
                 {{ object.post_date }}
