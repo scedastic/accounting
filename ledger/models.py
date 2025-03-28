@@ -70,7 +70,7 @@ class Transaction(models.Model):
         
         for entry in self.entries.all():
             entry.post_entry()
-        self.post_date = datetime.datetime.today        
+        self.post_date = datetime.date.today()        
         self.save()
 
     def is_balanced(self):
@@ -162,7 +162,7 @@ class JournalEntry(models.Model):
             self.account.balance += self.amount
         else:
             self.account.balance -= self.amount
-        self.post_date = datetime.date.today
+        self.post_date = datetime.date.today()
         self.is_posted = True
         self.save()
 
